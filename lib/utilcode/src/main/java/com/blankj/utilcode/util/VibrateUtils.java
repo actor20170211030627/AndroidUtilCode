@@ -1,7 +1,9 @@
 package com.blankj.utilcode.util;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Vibrator;
+import android.os.VibratorManager;
 import androidx.annotation.RequiresPermission;
 
 import static android.Manifest.permission.VIBRATE;
@@ -62,6 +64,12 @@ public final class VibrateUtils {
 
     private static Vibrator getVibrator() {
         if (vibrator == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                VibratorManager manager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+                if (manager != null) {
+                    return vibrator = manager.getDefaultVibrator();
+                }
+            }
             vibrator = (Vibrator) Utils.getApp().getSystemService(Context.VIBRATOR_SERVICE);
         }
         return vibrator;
